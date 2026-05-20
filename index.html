@@ -598,13 +598,13 @@
     }
 
     // 테마 적용 (서브 컬러를 직접 입력 받음)
-    function applyTheme(themeColor, themeDarkColor, textColor, btnColor) {
+    function applyTheme(themeColor, themeDarkColor, textColor, btnColor, btnDarkColor) {
         const root = document.documentElement;
         root.style.setProperty('--theme-main', themeColor);
         root.style.setProperty('--theme-dark', themeDarkColor);
         root.style.setProperty('--text-main', textColor);
         root.style.setProperty('--btn-main', btnColor);
-        root.style.setProperty('--btn-dark', btnColor);
+        root.style.setProperty('--btn-dark', btnDarkColor);
         
         // 커스텀 인풋 동기화
         document.getElementById('custom-theme-color').value = themeColor;
@@ -624,7 +624,7 @@
         const themeDarkC = document.getElementById('custom-theme-dark-color').value;
         const textC = document.getElementById('custom-text-color').value;
         const btnC = document.getElementById('custom-btn-color').value;
-        const btnC = document.getElementById('custom-btn-dark-color').value;
+        const btnDarkC = document.getElementById('custom-btn-dark-color').value;
         applyTheme(themeC, themeDarkC, textC, btnC, btnDarkC);
     }
 
