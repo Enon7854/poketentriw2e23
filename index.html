@@ -611,12 +611,12 @@
         document.getElementById('custom-theme-dark-color').value = themeDarkColor;
         document.getElementById('custom-text-color').value = textColor;
         document.getElementById('custom-btn-color').value = btnColor;
-        document.getElementById('custom-btn-dark-color').value = btnDarkColor
+        document.getElementById('custom-btn-dark-color').value = btnDarkColor;
     }
 
     function applyPreset(colorName) {
         const p = themePresets[colorName];
-        if(p) applyTheme(p.theme, p.themeDark, p.text, p.btn);
+        if(p) applyTheme(p.theme, p.themeDark, p.text, p.btn, p.btnDark);
     }
 
     function applyCustomTheme() {
