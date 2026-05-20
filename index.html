@@ -335,7 +335,7 @@
             font-weight: bold; cursor: pointer; text-align: center; font-size: 13px;
         }
         .custom-theme-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; /* 2x2 그리드로 변경 */
         }
         .custom-theme-grid input[type="color"] {
             width: 100%; height: 40px; cursor: pointer; border: 2px solid #000; border-radius: 6px; padding: 0; background: none; margin-top: 5px;
@@ -519,8 +519,12 @@
             <div class="modal-section-title">커스텀 테마 세팅</div>
             <div class="custom-theme-grid">
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label>도감 테마 컬러</label>
+                    <label>도감 메인 컬러</label>
                     <input type="color" id="custom-theme-color" onchange="applyCustomTheme()">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>도감 서브(그라데이션)</label>
+                    <input type="color" id="custom-theme-dark-color" onchange="applyCustomTheme()">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>화면 폰트 컬러</label>
@@ -568,15 +572,15 @@
     const typeContainer = document.getElementById('type-container');
     const selectedTypes = new Set();
 
-    // 테마 설정 관련 함수
+    // 테마 설정 프리셋에 서브 컬러(themeDark)를 추가 지정해 탁해짐 방지
     const themePresets = {
-        red: { theme: '#FF7575', text: '#1A1A1E', btn: '#FFCC00' },
-        blue: { theme: '#4FC3F7', text: '#1A1A1E', btn: '#FFF176' },
-        yellow: { theme: '#FFD54F', text: '#1A1A1E', btn: '#FF7575' },
-        pink: { theme: '#F48FB1', text: '#333333', btn: '#4FC3F7' }
+        red: { theme: '#FF7575', themeDark: '#ED0707', text: '#1A1A1E', btn: '#FFCC00' },
+        blue: { theme: '#4FC3F7', themeDark: '#0288D1', text: '#1A1A1E', btn: '#FFF176' },
+        yellow: { theme: '#FFD54F', themeDark: '#F57F17', text: '#1A1A1E', btn: '#FF7575' },
+        pink: { theme: '#F48FB1', themeDark: '#C2185B', text: '#333333', btn: '#4FC3F7' }
     };
 
-    // Hex 색상 밝기 조절 (그라데이션 및 다크 모드용)
+    // 버튼의 호버/액티브 상태 등에만 사용할 명도 조절 함수 (그라데이션 메인에는 사용 안함)
     function adjustColor(color, amount) {
         let usePound = false;
         if (color[0] == "#") { color = color.slice(1); usePound = true; }
@@ -593,30 +597,33 @@
         return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
     }
 
-    function applyTheme(themeColor, textColor, btnColor) {
+    // 테마 적용 (서브 컬러를 직접 입력 받음)
+    function applyTheme(themeColor, themeDarkColor, textColor, btnColor) {
         const root = document.documentElement;
         root.style.setProperty('--theme-main', themeColor);
-        root.style.setProperty('--theme-dark', adjustColor(themeColor, -40));
+        root.style.setProperty('--theme-dark', themeDarkColor);
         root.style.setProperty('--text-main', textColor);
         root.style.setProperty('--btn-main', btnColor);
-        root.style.setProperty('--btn-dark', adjustColor(btnColor, -30));
+        root.style.setProperty('--btn-dark', adjustColor(btnColor, -30)); // 버튼 그림자/액티브용
         
-        // 인풋 동기화
+        // 커스텀 인풋 동기화
         document.getElementById('custom-theme-color').value = themeColor;
+        document.getElementById('custom-theme-dark-color').value = themeDarkColor;
         document.getElementById('custom-text-color').value = textColor;
         document.getElementById('custom-btn-color').value = btnColor;
     }
 
     function applyPreset(colorName) {
         const p = themePresets[colorName];
-        if(p) applyTheme(p.theme, p.text, p.btn);
+        if(p) applyTheme(p.theme, p.themeDark, p.text, p.btn);
     }
 
     function applyCustomTheme() {
         const themeC = document.getElementById('custom-theme-color').value;
+        const themeDarkC = document.getElementById('custom-theme-dark-color').value;
         const textC = document.getElementById('custom-text-color').value;
         const btnC = document.getElementById('custom-btn-color').value;
-        applyTheme(themeC, textC, btnC);
+        applyTheme(themeC, themeDarkC, textC, btnC);
     }
 
     function openSettingsModal() { document.getElementById('settingsModal').style.display = 'flex'; }
